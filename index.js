@@ -33,13 +33,13 @@ app.get("/feed", async (req, res) => { // app.get handles get requests for feed
       console.log("Parsed items:", feed.items?.length); // test
 
       // stores the necessary items from the parsed feed
-      cachedFeed = feed.items.map(item => ({
+    cachedFeed = feed.items.map(item => ({
         title: item.title,
         link: item.link,
         categories: item.categories,
-        content: item.content,
-        description: item.contentSnippet
-      }));
+        content: item.content || item.description || '', // keep HTML intact
+    }));
+
 
       lastFetch = now;  // updates fetch
     } 
