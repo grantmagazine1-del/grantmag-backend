@@ -27,10 +27,9 @@ app.get("/feed", async (req, res) => { // app.get handles get requests for feed
         }
     });
        // RSS xml fetch
-      const xml = await response.text();            // converted fetched obj to txt
+      const xml = await response.text();
+      console.log(response); // converted fetched obj to txt
       const feed = await parser.parseString(xml);   // parses txt to a string json
-      console.log(xml.slice(0, 500)); // test
-      console.log("Parsed items:", feed.items?.length); // test
 
       // stores the necessary items from the parsed feed
     cachedFeed = feed.items.map(item => ({
@@ -38,7 +37,7 @@ app.get("/feed", async (req, res) => { // app.get handles get requests for feed
         link: item.link,
         categories: item.categories,
         content: item.content || item.description || '', // keep HTML intact
-    }));
+        }));
 
 
       lastFetch = now;  // updates fetch
