@@ -7,7 +7,7 @@ const Parser = require("rss-parser");     // parsing url rss/xml package
 const app = express();                     // express-based server app
 const parser = new Parser();               // RSS parser
 const PORT = process.env.PORT || 3000;     // server port
-const FEED_URL = "https://grantmagazine.com/feed/rss"; // fetching URL for magazine data
+const FEED_URL = "https://backfeed.app/jkLTDA9LpqPBIVdrjl/https://grantmagazine.com/feed/rss"; // fetching URL for magazine data
 
 // cache setup to prevent constant requests, stores fetched rss feed in the cache
 let cachedFeed = null;
