@@ -81,7 +81,7 @@ app.get("/article", async (req, res) => {
       }
     });
 
-    const html = await response.text();
+    let html = await response.text();
 
     // save to cache
     articleCache[url] = {
