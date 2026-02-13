@@ -90,6 +90,11 @@ app.get("/article", async (req, res) => {
     };
 
     console.log("Fetched new article:", url);
+    
+    html = html.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {
+      const proxied = `/image?url=${encodeURIComponent(src)}`;
+      return match.replace(src, proxied);
+    });
 
     res.set("Content-Type", "text/html");
     res.send(html);
