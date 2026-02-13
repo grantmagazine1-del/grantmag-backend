@@ -2,6 +2,7 @@
 // imported packages for Node.js
 const express = require("express");       // server dev package
 const Parser = require("rss-parser");     // parsing url rss/xml package
+const cors = require("cors");
 
 // create cost instances 
 const app = express();                     // express-based server app
@@ -13,6 +14,8 @@ const FEED_URL = "https://backfeed.app/jkLTDA9LpqPBIVdrjl/https://grantmagazine.
 let cachedFeed = null;
 let lastFetch = 0;
 const CACHE_INTERVAL = 15 * 60 * 1000; // 15 minute intervals
+
+app.use(cors());
 
 app.get("/feed", async (req, res) => { // feed get function
   const now = Date.now();
