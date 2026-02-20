@@ -114,7 +114,7 @@ app.get("/image", async (req, res) => {
   }
 
   // restrict to grantmagazine images for security
-  if (!url.startsWith("https://grantmagazine.com/")) {
+  if (!url.includes("grantmagazine.com")) {
     return res.status(403).send("Forbidden domain");
   }
 
