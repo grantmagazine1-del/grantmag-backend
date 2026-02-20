@@ -92,7 +92,7 @@ app.get("/article", async (req, res) => {
     console.log("Fetched new article:", url);
     
     html = html.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {
-      const proxied = `/image?url=${encodeURIComponent(src)}`;
+      const proxied = `https://grantmag-backend-production.up.railway.app/image?url=${encodeURIComponent(src)}`;
       return match.replace(src, proxied);
     });
 
