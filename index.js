@@ -105,47 +105,6 @@ app.get("/article", async (req, res) => {
   }
 });
 
-// image proxy route for Flutter Web CORS-safe loading
-app.get("/image", async (req, res) => {
-  const url = req.query.url;
-
-  if (!url) {
-    return res.status(400).send("Missing url parameter");
-  }
-
-  // restrict to grantmagazine images for security
-  if (!url.includes("grantmagazine.com")) {
-    return res.status(403).send("Forbidden domain");
-  }
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; GrantMagBot/1.0)"
-      }
-    });
-
-    if (!response.ok) {
-      return res.status(response.status).send("Upstream image failed");
-    }
-
-    const buffer = Buffer.from(await response.arrayBuffer());
-
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set(
-      "Content-Type",
-      response.headers.get("content-type") || "image/jpeg"
-    );
-
-    res.send(buffer);
-
-  } catch (e) {
-    console.error("Image fetch error:", e);
-    res.status(500).send("Image proxy failed");
-  }
-});
-
 app.get("/", (req, res) => res.send("GrantMag backend is running!")); // server health check
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // port check
