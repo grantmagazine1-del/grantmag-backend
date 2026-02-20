@@ -8,7 +8,7 @@ const cors = require("cors");
 const app = express();                     // express-based server app
 const parser = new Parser();               // RSS parser
 const PORT = process.env.PORT || 3000;     // server port
-const FEED_URL = "https://backfeed.app/jkLTDA9LpqPBIVdrjl/https://grantmagazine.com/feed/rss"; // fetching URL for magazine data
+const FEED_URL = "https://grantmagazine.com/feed/"; // fetching URL for magazine data
 
 app.use(cors()); // cors for browser testing security
 
