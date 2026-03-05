@@ -1,3 +1,4 @@
+console.log("ENV CHECK:", Object.keys(process.env).filter(k => k.includes("FIREBASE")));
 
 // imported packages for Node.js
 const express = require("express");       // server dev package
