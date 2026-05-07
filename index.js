@@ -11,6 +11,8 @@ const parser = new Parser();               // RSS parser
 const PORT = process.env.PORT || 3000;     // server port
 const FEED_URL = "https://grantmagazine.com/feed/"; // fetching URL for magazine data
 
+let lastSeenArticleID = null;
+
 const admin = require("firebase-admin"); // firebase admin for push notif
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -28,6 +30,10 @@ app.use(cors()); // cors for browser testing security
 let cachedFeed = null;
 let lastFeedFetch = 0;
 const FEED_CACHE_INTERVAL = 15 * 60 * 1000; // 15 min interval
+
+setInterval(() => {
+  checkRSSUpdates();
+}, 5 * 60 * 1000); // 5 min interval
 
 app.get("/feed", async (req, res) => {
   const now = Date.now();
@@ -103,7 +109,7 @@ app.get("/article", async (req, res) => {
     };
 
     console.log("Fetched new article:", url);
-    
+    // html cleanup
     html = html.replace(/<img[^>]+src="([^"]+)"/g, (match, src) => {
       const proxied = `https://grantmag-backend-production.up.railway.app/image?url=${encodeURIComponent(src)}`;
       return match.replace(src, proxied);
@@ -117,6 +123,55 @@ app.get("/article", async (req, res) => {
     res.status(500).send("");
   }
 });
+
+async function sendPush(article) { // push notifications func
+  const message = {
+    notification: {
+      title: article.title || "New Article",
+      body: article.contentSnippet || "Tap to read",
+    },
+    data: {
+      url: article.link || "",
+    },
+    topic: "news", // temp placeholder, could utilize tokens
+  };
+
+  try {
+    const res = await messaging.send(message);
+    console.log("Push sent:", res);
+  } catch (err) {
+    console.error("Push failed:", err);
+  }
+}
+
+async function checkRSSUpdates() { // monitor feed for new articles, then pushes notif
+  try {
+    const feed = await parser.parseURL(FEED_URL);
+
+    const latest = feed.items?.[0];
+
+    if (!latest) return;
+
+    const latestId = latest.guid || latest.link || latest.pubDate;
+
+    if (!lastSeenArticleId) {
+      lastSeenArticleId = latestId;
+      console.log("Initialized RSS state");
+      return;
+    }
+
+    if (latestId !== lastSeenArticleId) {
+      console.log("NEW ARTICLE DETECTED:", latest.title);
+
+      lastSeenArticleId = latestId;
+
+      await sendPush(latest);
+    }
+
+  } catch (err) {
+    console.error("RSS check failed:", err);
+  }
+}
 
 app.get("/", (req, res) => res.send("GrantMag backend is running!")); // server health check
 
