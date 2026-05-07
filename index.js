@@ -173,6 +173,23 @@ async function checkRSSUpdates() { // monitor feed for new articles, then pushes
   }
 }
 
+app.get("/test-push", async (req, res) => { // test push for notifs
+  try {
+    await messaging.send({
+      topic: "news",
+      notification: {
+        title: "Test Push",
+        body: "Backend is running locally",
+      },
+    });
+    console.log("Test push sent");
+    res.send("OK");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error sending push");
+  }
+});
+
 app.get("/", (req, res) => res.send("GrantMag backend is running!")); // server health check
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // port check
