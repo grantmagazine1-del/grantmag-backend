@@ -11,7 +11,7 @@ const parser = new Parser();               // RSS parser
 const PORT = process.env.PORT || 3000;     // server port
 const FEED_URL = "https://grantmagazine.com/feed/"; // fetching URL for magazine data
 
-let lastSeenArticleID = null;
+let lastSeenArticleId= null;
 
 const admin = require("firebase-admin"); // firebase admin for push notif
 admin.initializeApp({
