@@ -33,7 +33,7 @@ const FEED_CACHE_INTERVAL = 15 * 60 * 1000; // 15 min interval
 
 setInterval(() => {
   checkRSSUpdates();
-}, 5 * 60 * 1000); // 5 min interval
+}, 60 * 1000); // 1 min interval
 
 app.get("/feed", async (req, res) => {
   const now = Date.now();
@@ -66,7 +66,7 @@ app.get("/feed", async (req, res) => {
 
 // seperate article cache for simplicity
 let articleCache = {};
-const ARTICLE_CACHE_INTERVAL = 10 * 60 * 1000; // 10 min interval
+const ARTICLE_CACHE_INTERVAL = 60 * 1000; // 1 min interval
 
 app.get("/article", async (req, res) => {
   const url = req.query.url;
