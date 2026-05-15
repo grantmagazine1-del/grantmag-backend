@@ -148,24 +148,24 @@ async function checkRSSUpdates() { // monitor feed for new articles, then pushes
   try {
     const feed = await parser.parseURL(FEED_URL);
 
-    const latest = feed.items?.[0];
+    const latest = feed.items?.[0]; //newest item
 
     if (!latest) return;
 
-    const latestId = latest.guid || latest.link || latest.pubDate;
+    const latestId = latest.guid || latest.link || latest.pubDate; //fallback detail
 
     if (!lastSeenArticleId) {
-      lastSeenArticleId = latestId;
+      lastSeenArticleId = latestId; // id storage
       console.log("Initialized RSS state");
       return;
     }
 
     if (latestId !== lastSeenArticleId) {
-      console.log("NEW ARTICLE DETECTED:", latest.title);
+      console.log("New article:", latest.title);
 
       lastSeenArticleId = latestId;
 
-      await sendPush(latest);
+      await sendPush(latest); //notification push
     }
 
   } catch (err) {
